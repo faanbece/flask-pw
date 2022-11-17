@@ -214,10 +214,10 @@ class Peewee(object):
 
         @cli.command()
         @click.argument('name')
-        @click.option('--auto', is_flag=True)
-        def create(name, auto=False):
+        @click.option('--blank', is_flag=True)
+        def create(name, blank=False):
             """Create a new migration."""
-            return self.cmd_create(name, auto)
+            return self.cmd_create(name, not blank)
 
         @cli.command()
         @click.argument('name', default=None, required=False)
