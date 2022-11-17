@@ -1,5 +1,5 @@
 import peewee as pw
-from flask._compat import with_metaclass, string_types
+from six import with_metaclass
 
 
 class Choices:
@@ -11,7 +11,7 @@ class Choices:
         self._choices = []
         self._reversed = {}
         for choice in choices:
-            if isinstance(choice, string_types):
+            if isinstance(choice, str):
                 choice = (choice, choice)
             self._choices.append(choice)
             self._reversed[str(choice[1])] = choice[0]
@@ -77,7 +77,7 @@ class Signal:
             receiver(instance, *args, **kwargs)
 
 
-class BaseSignalModel(pw.BaseModel):
+class BaseSignalModel(pw.ModelBase):
 
     """Create signals."""
 
@@ -91,7 +91,7 @@ class BaseSignalModel(pw.BaseModel):
         cls.post_delete = Signal()
         cls.post_save = Signal()
 
-        if cls._meta.db_table and cls._meta.db_table != 'model':
+        if cls._meta.table_name and cls._meta.table_name != "model":
             mcs.models.append(cls)
 
         cls._meta.read_slaves = getattr(cls._meta, 'read_slaves', None)

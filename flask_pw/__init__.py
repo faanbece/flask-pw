@@ -4,7 +4,6 @@ from importlib import import_module
 
 import peewee as pw
 from cached_property import cached_property
-from flask._compat import string_types
 from peewee_migrate.router import Router
 from playhouse.db_url import connect
 
@@ -57,7 +56,7 @@ class Peewee(object):
         database = get_database(database, **params)
 
         slaves = app.config['PEEWEE_READ_SLAVES']
-        if isinstance(slaves, string_types):
+        if isinstance(slaves, str):
             slaves = slaves.split(',')
         self.slaves = [get_database(slave, **params) for slave in slaves if slave]
 
@@ -102,19 +101,19 @@ class Peewee(object):
         if Model_ is not Model:
             try:
                 mod = import_module(self.app.config['PEEWEE_MODELS_MODULE'])
-                for model in dir(mod):
-                    models = getattr(mod, model)
-                    if not isinstance(model, pw.Model):
+                for model_name in dir(mod):
+                    model = getattr(mod, model_name)
+                    if not isinstance(model, pw.ModelBase):
                         continue
-                    models.append(models)
+                    models.append(model)
             except ImportError:
-                return models
+                return model
         elif isinstance(Model_, BaseSignalModel):
             models = BaseSignalModel.models
 
         return [m for m in models if m._meta.name not in ignore]
 
-    def cmd_create(self, name, auto=False):
+    def cmd_create(self, name, auto=True):
         """Create a new migration."""
 
         LOGGER.setLevel('INFO')
@@ -125,7 +124,7 @@ class Peewee(object):
                         migrate_table=self.app.config['PEEWEE_MIGRATE_TABLE'])
 
         if auto:
-            auto = self.models
+            _ = self.models
 
         router.create(name, auto=auto)
 
@@ -243,6 +242,6 @@ class Peewee(object):
 
 def get_database(obj, **params):
     """Get database from given URI/Object."""
-    if isinstance(obj, string_types):
+    if isinstance(obj, str):
         return connect(obj, **params)
     return obj
