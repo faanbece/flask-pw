@@ -1,3 +1,7 @@
+2019-02-20  faanbece
+    * Peewee3 compatibility
+	* Set auto=True as default behaviour
+
 2016-04-02  klen
 
 	* First public release
