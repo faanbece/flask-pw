@@ -113,7 +113,7 @@ class Peewee(object):
 
         return [m for m in models if m._meta.name not in ignore]
 
-    def cmd_create(self, name, auto=True):
+    def cmd_create(self, name, auto=False):
         """Create a new migration."""
 
         LOGGER.setLevel('INFO')
