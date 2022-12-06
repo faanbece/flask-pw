@@ -98,16 +98,17 @@ class Peewee(object):
         ignore = self.app.config['PEEWEE_MODELS_IGNORE']
 
         models = []
+        breakpoint()
         if Model_ is not Model:
             try:
                 mod = import_module(self.app.config['PEEWEE_MODELS_MODULE'])
                 for model_name in dir(mod):
-                    models = getattr(mod, model_name)
-                    if not isinstance(model_name, pw.ModelBase):
+                    model = getattr(mod, model_name)
+                    if not isinstance(model, pw.ModelBase):
                         continue
-                    models.append(model_name)
+                    models.append(model)
             except ImportError:
-                return models
+                return model
         elif isinstance(Model_, BaseSignalModel):
             models = BaseSignalModel.models
 
