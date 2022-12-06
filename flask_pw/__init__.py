@@ -124,7 +124,7 @@ class Peewee(object):
                         migrate_table=self.app.config['PEEWEE_MIGRATE_TABLE'])
 
         if auto:
-            _ = self.models
+            auto = self.models
 
         router.create(name, auto=auto)
 
