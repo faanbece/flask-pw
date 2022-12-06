@@ -98,7 +98,6 @@ class Peewee(object):
         ignore = self.app.config['PEEWEE_MODELS_IGNORE']
 
         models = []
-        breakpoint()
         if Model_ is not Model:
             try:
                 mod = import_module(self.app.config['PEEWEE_MODELS_MODULE'])
