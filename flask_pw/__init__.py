@@ -102,12 +102,12 @@ class Peewee(object):
             try:
                 mod = import_module(self.app.config['PEEWEE_MODELS_MODULE'])
                 for model_name in dir(mod):
-                    model = getattr(mod, model_name)
-                    if not isinstance(model, pw.ModelBase):
+                    models = getattr(mod, model_name)
+                    if not isinstance(model_name, pw.ModelBase):
                         continue
-                    models.append(model)
+                    models.append(model_name)
             except ImportError:
-                return model
+                return models
         elif isinstance(Model_, BaseSignalModel):
             models = BaseSignalModel.models
 
@@ -124,7 +124,7 @@ class Peewee(object):
                         migrate_table=self.app.config['PEEWEE_MIGRATE_TABLE'])
 
         if auto:
-            auto = self.models
+            _ = self.models
 
         router.create(name, auto=auto)
 
